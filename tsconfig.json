@@ -1,0 +1,17 @@
+{
+  "compileOnSave": true,
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
+    "sourceMap": false,
+    "moduleResolution": "node",
+    "declaration": false,
+    "rootDir": "src/components",
+    "outDir": "src/js"
+  },
+  "files": [
+    "typings/tsd.d.ts",
+    "src/components/index.ts"
+  ]
+}

@@ -1,0 +1,43 @@
+{
+  "name": "catreact-tutorial",
+  "version": "1.0.0",
+  "main": "./src/js/index.js",
+  "description": "Catavolt React Client",
+  "author": "Rob Burson <rob.burson@catavolt.com>",
+  "license": "Apache-2.0",
+  "keywords": [
+    "catavolt",
+    "javascript",
+    "react"
+  ],
+  "repository": {
+    "type": "git",
+    "url":  "https://github.com/catavolt-oss/catreact-tutorial.git"
+  },
+  "dependencies": {
+    "babel-cli": "^6.4.5",
+    "babel-core": "^6.4.5",
+    "babel-loader": "^6.2.1",
+    "babel-preset-es2015": "^6.3.13",
+    "babel-preset-react": "^6.3.13",
+    "babelify": "^7.2.0",
+    "catavolt-sdk": "1.1.23",
+    "catreact": "2.0.38",
+    "catreact-html": "2.0.41",
+    "react": "~15.3.2",
+    "react-dom": "~15.3.2",
+    "react-router": "2.8.1",
+    "watchify": "^3.6.1",
+    "webpack": "^1.12.12"
+  },
+  "peerDependencies": {
+    "catavolt-sdk": "1.1.23",
+    "catreact": "2.0.38",
+    "catreact-html": "2.0.41",
+    "react": "~15.3.2",
+    "react-dom": "~15.3.2"
+  },
+  "scripts": {
+    "start": "./node_modules/.bin/watchify -v -t [ babelify --presets [ es2015 react ] ] src/js/index.js -o web/bundle.js"
+  }
+}
