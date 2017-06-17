@@ -38,6 +38,6 @@
     "react-dom": "~15.3.2"
   },
   "scripts": {
-    "start": "./node_modules/.bin/watchify -v -t [ babelify --presets [ es2015 react ] ] src/js/index.js -o web/bundle.js"
+    "start": "./node_modules/.bin/watchify -v -t [ babelify --presets [ es2015 react ] ] src/js/app.js -o web/bundle.js"
   }
 }

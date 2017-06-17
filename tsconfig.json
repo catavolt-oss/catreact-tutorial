@@ -12,6 +12,6 @@
   },
   "files": [
     "typings/tsd.d.ts",
-    "src/components/index.ts"
+    "src/components/app.tsx"
   ]
 }
