@@ -12,10 +12,12 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
 /** Import the Catavolt React components that we'll use */
-import { CatavoltPane } from 'catreact'
+import {CatavoltPane, CvEvent, CvLoginResult} from 'catreact'
 
 /** Import the Catavolt Javascript API objects that we'll use */
 import { Log, LogLevel } from 'catavolt-sdk'
+
+import {CvLoginPanel} from "catreact-html";
 
 /** At this level the console will show all requests and responses to and from the Catavolt server */
 Log.logLevel(LogLevel.DEBUG);
@@ -33,12 +35,34 @@ const CatreactApp = React.createClass({
             <div className="container">
                 <CatavoltPane enableResourceCaching={true}>
                     <div>
-                        <h1>Hello Catreact!</h1>
-                        {this.props.children}
+                        <CatreactLogin/>
                     </div>
                 </CatavoltPane>
             </div>
         );
+    }
+});
+
+const CatreactLogin = React.createClass({
+
+    render: function () {
+        return <div className="cv-login-wrapper">
+            <div className="cv-login-logo"/>
+            <CvLoginPanel
+                defaultGatewayUrl={'www.catavolt.net'}
+                defaultTenantId={'cvtutorial'}
+                defaultUserId={'wsmith'}
+                defaultPassword={'biznes1'}
+                showTenantId={false}
+                showDirectUrl={false}
+                showGatewayUrl={false}
+                showClientType={false}
+                loginListeners={[(event:CvEvent<CvLoginResult>)=>{
+                    const sessionId = event.resourceId;  //get the session from the LoginEvent
+                    Log.debug('I logged in with sessionId: ' + sessionId);
+                }]}
+            />
+        </div>
     }
 });
 
