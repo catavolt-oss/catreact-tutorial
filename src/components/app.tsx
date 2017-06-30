@@ -35,7 +35,7 @@ const CatreactApp = React.createClass({
             <div className="container">
                 <CatavoltPane enableResourceCaching={true}>
                     <div>
-                        <CatreactLogin/>
+                        {this.props.children}
                     </div>
                 </CatavoltPane>
             </div>
@@ -50,16 +50,16 @@ const CatreactLogin = React.createClass({
             <div className="cv-login-logo"/>
             <CvLoginPanel
                 defaultGatewayUrl={'www.catavolt.net'}
-                defaultTenantId={'cvtutorial'}
-                defaultUserId={'wsmith'}
-                defaultPassword={'biznes1'}
+                defaultTenantId={'solarsourcez'}
+                defaultUserId={'sales'}
+                defaultPassword={'sales-1'}
                 showTenantId={false}
                 showDirectUrl={false}
                 showGatewayUrl={false}
                 showClientType={false}
                 loginListeners={[(event:CvEvent<CvLoginResult>)=>{
                     const sessionId = event.resourceId;  //get the session from the LoginEvent
-                    Log.debug('I logged in with sessionId: ' + sessionId);
+                    Log.debug('I logged in with windowId/sessionId: ' + sessionId);
                 }]}
             />
         </div>
@@ -71,7 +71,7 @@ const CatreactLogin = React.createClass({
  */
 
 const app = (
-    <CatreactApp/>
+    <CatreactApp><CatreactLogin/></CatreactApp>
 );
 
 ReactDOM.render(app, document.getElementById('catreactApp'));
