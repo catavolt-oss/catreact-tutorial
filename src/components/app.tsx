@@ -13,14 +13,15 @@ import * as ReactDOM from 'react-dom'
 
 /** Import the Catavolt React components that we'll use */
 import {
-    CatavoltPane, CvAppWindow, CvEvent, CvLoginResult, CvLogout, CvContext, CvLogoutCallback,
-    CvLogoutResult
+    CatavoltPane, CvAppWindow, CvEvent, CvLoginResult, CvLogout, CvContext, CvLogoutCallback
 } from 'catreact'
 
 /** Import the Catavolt Javascript API objects that we'll use */
 import { Log, LogLevel } from 'catavolt-sdk'
 
 import {CvLoginPanel} from "catreact-html";
+
+import {Router, hashHistory, Route, IndexRoute} from "react-router";
 
 /** At this level the console will show all requests and responses to and from the Catavolt server */
 Log.logLevel(LogLevel.DEBUG);
@@ -31,7 +32,17 @@ Log.logLevel(LogLevel.DEBUG);
  *  *********************************
  */
 
+const CatreactAppBase = {
+
+    contextTypes: {
+        router: React.PropTypes.object
+    },
+
+};
+
 const CatreactApp = React.createClass({
+
+   mixins: [CatreactAppBase],
 
     render: function () {
         return (
@@ -46,7 +57,9 @@ const CatreactApp = React.createClass({
     }
 });
 
-const CatreactLogin = React.createClass<{loginListener},{}>({
+const CatreactLogin = React.createClass({
+
+    mixins: [CatreactAppBase],
 
     render: function () {
         return <div className="login-wrapper">
@@ -60,26 +73,29 @@ const CatreactLogin = React.createClass<{loginListener},{}>({
                 showDirectUrl={false}
                 showGatewayUrl={false}
                 showClientType={false}
-                loginListeners={[this.props.loginListener, (event:CvEvent<CvLoginResult>)=>{
+                loginListeners={[(event:CvEvent<CvLoginResult>)=>{
                     const sessionId = event.resourceId;  //get the session from the LoginEvent
-                    Log.debug('I logged in with windowId/sessionId: ' + sessionId);
+                    this.context.router.replace('/window/' + sessionId);
                 }]}
             />
         </div>
     }
 });
 
-const CatreactWindow = React.createClass<{windowId, logoutListener},{}>({
+const CatreactWindow = React.createClass({
+
+    mixins: [CatreactAppBase],
 
     render: function () {
-        const windowId = this.props.windowId; //get the windowId (sessionId)
+        const windowId = this.props.params.windowId; //get the windowId (sessionId)
         return <CvAppWindow windowId={windowId}>
             <div>
+                <div className="primary-logo text-left"/>
                 <div className="top-nav text-right">
-                    <CvLogout logoutListeners={[this.props.logoutListener]}
-                        renderer={(cvContext:CvContext, callback:CvLogoutCallback)=>{
+                    <CvLogout renderer={(cvContext:CvContext, callback:CvLogoutCallback)=>{
                             return <div className="click-target"><a onClick={callback.logout}>Logout</a></div>
                         }}
+                        logoutListeners={[()=>{ this.context.router.replace('/');}]}
                     />
                 </div>
                 <div className="workbench-navbar bg-color1">
@@ -92,27 +108,19 @@ const CatreactWindow = React.createClass<{windowId, logoutListener},{}>({
 
 });
 
-const SimpleRouter = React.createClass({
-
-    render: function() {
-        return (
-            <CatreactApp>
-                <CatreactLogin loginListener={(event:CvEvent<CvLoginResult>)=>{
-                   this.setState({windowId: event.resourceId});
-                }}/>
-                <CatreactWindow windowId={this.state ? this.state.windowId : null}
-                    logoutListener={(event:CvEvent<CvLogoutResult>)=>{
-                        this.setState({windowId: null})}}/>
-            </CatreactApp>
-        );
-    }
-
-});
-
 /**
  * Render the example to the document
  */
 
-const app = <SimpleRouter/>;
+const app = (
+    <Router history={hashHistory}>
+        <Route path="/" component={CatreactApp}>
+            <IndexRoute component={CatreactLogin}/>
+            <Route path="/window/:windowId" component={CatreactWindow}/>
+        </Route>
+    </Router>
+);
 
 ReactDOM.render(app, document.getElementById('catreactApp'));
+
+

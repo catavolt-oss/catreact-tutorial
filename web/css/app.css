@@ -35,6 +35,14 @@ body {
     margin-bottom: 5px;
 }
 
+.primary-logo {
+    background: url(../img/logo_sm.png) center;
+    width: 330px;
+    height: 52px;
+    margin-top: 30px;
+    margin-left: 10px;
+}
+
 .login-wrapper {
     padding: 10px;
 }
