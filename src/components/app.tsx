@@ -66,7 +66,6 @@ const CatreactLogin = React.createClass({
     }
 });
 
-
 /**
  * Render the example to the document
  */
