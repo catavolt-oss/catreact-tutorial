@@ -12,7 +12,10 @@ import * as React from 'react'
 import * as ReactDOM from 'react-dom'
 
 /** Import the Catavolt React components that we'll use */
-import {CatavoltPane, CvEvent, CvLoginResult} from 'catreact'
+import {
+    CatavoltPane, CvAppWindow, CvEvent, CvLoginResult, CvLogout, CvContext, CvLogoutCallback,
+    CvLogoutResult
+} from 'catreact'
 
 /** Import the Catavolt Javascript API objects that we'll use */
 import { Log, LogLevel } from 'catavolt-sdk'
@@ -43,11 +46,11 @@ const CatreactApp = React.createClass({
     }
 });
 
-const CatreactLogin = React.createClass({
+const CatreactLogin = React.createClass<{loginListener},{}>({
 
     render: function () {
-        return <div className="cv-login-wrapper">
-            <div className="cv-login-logo"/>
+        return <div className="login-wrapper">
+            <div className="login-logo"/>
             <CvLoginPanel
                 defaultGatewayUrl={'www.catavolt.net'}
                 defaultTenantId={'cvtutorial'}
@@ -57,7 +60,7 @@ const CatreactLogin = React.createClass({
                 showDirectUrl={false}
                 showGatewayUrl={false}
                 showClientType={false}
-                loginListeners={[(event:CvEvent<CvLoginResult>)=>{
+                loginListeners={[this.props.loginListener, (event:CvEvent<CvLoginResult>)=>{
                     const sessionId = event.resourceId;  //get the session from the LoginEvent
                     Log.debug('I logged in with windowId/sessionId: ' + sessionId);
                 }]}
@@ -66,12 +69,50 @@ const CatreactLogin = React.createClass({
     }
 });
 
+const CatreactWindow = React.createClass<{windowId, logoutListener},{}>({
+
+    render: function () {
+        const windowId = this.props.windowId; //get the windowId (sessionId)
+        return <CvAppWindow windowId={windowId}>
+            <div>
+                <div className="top-nav text-right">
+                    <CvLogout logoutListeners={[this.props.logoutListener]}
+                        renderer={(cvContext:CvContext, callback:CvLogoutCallback)=>{
+                            return <div className="click-target"><a onClick={callback.logout}>Logout</a></div>
+                        }}
+                    />
+                </div>
+                <div className="workbench-navbar bg-color1">
+                    <div className="workbench-tab-menu"></div>
+                </div>
+                {this.props.children}
+            </div>
+        </CvAppWindow>;
+    }
+
+});
+
+const SimpleRouter = React.createClass({
+
+    render: function() {
+        return (
+            <CatreactApp>
+                <CatreactLogin loginListener={(event:CvEvent<CvLoginResult>)=>{
+                   this.setState({windowId: event.resourceId});
+                }}/>
+                <CatreactWindow windowId={this.state ? this.state.windowId : null}
+                    logoutListener={(event:CvEvent<CvLogoutResult>)=>{
+                        this.setState({windowId: null})}}/>
+            </CatreactApp>
+        );
+    }
+
+});
+
 /**
  * Render the example to the document
  */
 
-const app = (
-    <CatreactApp><CatreactLogin/></CatreactApp>
-);
+const app = <SimpleRouter/>;
 
 ReactDOM.render(app, document.getElementById('catreactApp'));
