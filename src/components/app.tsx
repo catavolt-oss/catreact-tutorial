@@ -13,11 +13,12 @@ import * as ReactDOM from 'react-dom'
 
 /** Import the Catavolt React components that we'll use */
 import {
-    CatavoltPane, CvAppWindow, CvEvent, CvLoginResult, CvLogout, CvContext, CvLogoutCallback
+    CatavoltPane, CvAppWindow, CvEvent, CvLoginResult, CvLogout, CvContext, CvLogoutCallback, CvWorkbench, CvLauncher,
+    CvNavigationResult, CvLaunchActionCallback, CvWorkbenchMenu
 } from 'catreact'
 
 /** Import the Catavolt Javascript API objects that we'll use */
-import { Log, LogLevel } from 'catavolt-sdk'
+import {Log, LogLevel, Workbench, WorkbenchLaunchAction} from 'catavolt-sdk'
 
 import {CvLoginPanel} from "catreact-html";
 
@@ -99,14 +100,44 @@ const CatreactWindow = React.createClass({
                     />
                 </div>
                 <div className="workbench-navbar bg-color1">
-                    <div className="workbench-tab-menu"></div>
+                    <div className="workbench-tab-menu">
+                        <CatreactNavbar windowId={windowId}/>
+                    </div>
                 </div>
                 {this.props.children}
             </div>
         </CvAppWindow>;
     }
+});
+
+const CatreactNavbar = React.createClass<{windowId},{}>({
+
+    mixins: [CatreactAppBase],
+
+    render: function () {
+        const windowId = this.props.windowId; //get the window from the url param
+
+        return (
+            <CvWorkbench workbenchId={"AAABACffAAAAAE8X"} renderer={(cvContext:CvContext)=>{
+                const workbench:Workbench = cvContext.scopeCtx.scopeObj as Workbench;
+                return (
+                    <ul className="nav nav-pills">
+                        <CvLauncher actionId={"AAABACfaAAAAAKE8"}
+                            renderer={(cvContext:CvContext, callback:CvLaunchActionCallback)=>{
+                                const launcher:WorkbenchLaunchAction = cvContext.scopeCtx.scopeObj;
+                                return <li onClick={()=>{callback.fireLaunchAction()}}>
+                                    <a className="click-target">{launcher.name}</a>
+                                </li>
+                            }}
+                        />
+                    </ul>
+                );
+            }}/>
+        );
+    }
 
 });
+
 
 /**
  * Render the example to the document
