@@ -14,11 +14,14 @@ import * as ReactDOM from 'react-dom'
 /** Import the Catavolt React components that we'll use */
 import {
     CatavoltPane, CvAppWindow, CvEvent, CvLoginResult, CvLogout, CvContext, CvLogoutCallback, CvWorkbench, CvLauncher,
-    CvNavigationResult, CvLaunchActionCallback, CvWorkbenchMenu
+    CvNavigationResult, CvLaunchActionCallback, CvQueryPaneCallback, CvValueAdapter, CvForm,
+    CvNavigation, CvListPane, CvRecordList, CvRecord, CvAction, CvActionCallback, CvProp
 } from 'catreact'
 
 /** Import the Catavolt Javascript API objects that we'll use */
-import {Log, LogLevel, Workbench, WorkbenchLaunchAction} from 'catavolt-sdk'
+import {
+    ColumnDef, ListContext, Log, LogLevel, Prop, Workbench, WorkbenchLaunchAction
+} from 'catavolt-sdk'
 
 import {CvLoginPanel} from "catreact-html";
 
@@ -123,6 +126,10 @@ const CatreactNavbar = React.createClass<{windowId},{}>({
                 return (
                     <ul className="nav nav-pills">
                         <CvLauncher actionId={"AAABACfaAAAAAKE8"}
+                           launchListeners={[(launchEvent:CvEvent<CvNavigationResult>)=>{
+                               const listNavId = launchEvent.resourceId;
+                               this.context.router.push('/product/' + windowId + '/' + listNavId);
+                            }]}
                             renderer={(cvContext:CvContext, callback:CvLaunchActionCallback)=>{
                                 const launcher:WorkbenchLaunchAction = cvContext.scopeCtx.scopeObj;
                                 return <li onClick={()=>{callback.fireLaunchAction()}}>
@@ -139,6 +146,96 @@ const CatreactNavbar = React.createClass<{windowId},{}>({
 });
 
 
+const ProductList = React.createClass<{},{}>({
+
+    mixins: [CatreactAppBase],
+
+    render: function () {
+
+        return (
+            <CvNavigation navigationId={this.props.params.listNavId}>
+                <CvForm>
+                    <div className="panel panel-primary">
+                        <div className="panel-heading"><h5 className="panel-title">Products</h5></div>
+                        <div className="panel-body row">
+                            <CvListPane paneRef={0} recordPageSize={5} queryRenderer={(cvContext:CvContext, callback:CvQueryPaneCallback)=>{
+                                const listContext:ListContext = cvContext.scopeCtx.scopeObj;
+                                return(
+                                    <div>
+                                        <table className="table table-striped">
+                                            <thead>
+                                            {/* Iterate through columns and create the headers */}
+                                            <tr>{listContext.listDef.activeColumnDefs.map((colDef, index) => { return <th key={index}>{colDef.heading}</th> })}</tr>
+                                            </thead>
+                                            {/* Iterate through our list of records and crate the rows using the 'rowRenderer' */}
+                                            <CvRecordList queryContext={listContext} wrapperElemName={'tbody'} rowRenderer={(cvContext, record)=>{
+                                                return (
+                                                    <CvRecord entityRec={record} key={record.objectId} renderer={(cvContext:CvContext)=>{
+                                                        const renderPropNames = listContext.listDef.activeColumnDefs.map((colDef:ColumnDef)=>{return colDef.name});
+                                                        return (
+                                                            <tr>
+                                                                {/* Iterate through our properties and create the columns */}
+                                                                {renderPropNames.map((name:string)=> {
+                                                                    const prop:Prop = record.propAtName(name);
+                                                                    /*
+                                                                     Select the oid of "this record" so that the action can find the target via the selectionProvider
+                                                                     Actions require a selectionProvider, so we then give the newly created selectionAdapter to the CvAction (below)
+                                                                     */
+                                                                    const selectionAdapter:CvValueAdapter<Array<string>> = new CvValueAdapter<Array<string>>();
+                                                                    selectionAdapter.getDelegateValueListener()([record.objectId]);
+                                                                    /*
+                                                                     Wrap the property with a Catavolt Action that will fire the 'default list action' when row is clicked
+                                                                     The 'onClick' handler on the 'td' element use the action's callback to make this happen
+                                                                     Also specify a navigationListener to handle the 'Navigation Result' produced by the Catavolt Action
+                                                                     This will be a Navigation Result containing the 'DetailsPane' that we want to display below the list
+                                                                     */
+                                                                    return (
+                                                                        <CvAction actionId={listContext.listDef.defaultActionId}
+                                                                                  paneContext={listContext} key={prop.name}
+                                                                                  selectionProvider={selectionAdapter}
+                                                                                  renderer={(cvContext:CvContext, callback?:CvActionCallback)=>{
+                                                                                      return <td className="click-target" onClick={()=>callback.fireAction()}>
+                                                                                          <CvProp propName={prop.name} entityRec={record} paneContext={listContext}/>
+                                                                                      </td>
+                                                                                  }}
+                                                                        />
+                                                                    )
+                                                                })}
+                                                            </tr>
+                                                        );
+                                                    }}/>
+                                                );
+                                            }}/>
+                                        </table>
+                                        <div className="paging-controls">
+                                            <div className="pull-left">
+                                                {(()=>{ if(callback.hasMoreBackward()){ return (
+                                                    <button type="button" className="btn btn-default btn-sm" onClick={(()=>{callback.pageBackward((num)=>{}, true)})}>
+                                                        <span className="glyphicon glyphicon-menu-left" aria-hidden="true"/>
+                                                        <span>Prev</span>
+                                                    </button>
+                                                );}})()}
+                                            </div>
+                                            <div className="pull-right">
+                                                {(()=>{ if(callback.hasMoreForward()){ return (
+                                                    <button type="button" className="btn btn-default btn-sm" onClick={()=>{callback.pageForward((num)=>{}, true)}}>
+                                                        <span>Next</span>
+                                                        <span className="glyphicon glyphicon-menu-right" aria-hidden="true"/>
+                                                    </button>
+                                                );}})()}
+                                            </div>
+                                        </div>
+                                    </div>
+                                );
+                            }}/>
+                        </div>
+                    </div>
+                </CvForm>
+            </CvNavigation>
+        );
+    }
+});
+
 /**
  * Render the example to the document
  */
@@ -147,7 +244,9 @@ const app = (
     <Router history={hashHistory}>
         <Route path="/" component={CatreactApp}>
             <IndexRoute component={CatreactLogin}/>
-            <Route path="/window/:windowId" component={CatreactWindow}/>
+            <Route path="window/:windowId" component={CatreactWindow}>
+                <Route path="/product/:windowId/:listNavId" component={ProductList}/>
+            </Route>
         </Route>
     </Router>
 );
