@@ -107,6 +107,12 @@ body {
     margin: 5px;
 }
 
+/* detail */
+
+.detail-label {
+    font-weight: bold;
+}
+
 /* catavolt icons */
 
 .cv-icon {

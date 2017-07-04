@@ -15,12 +15,14 @@ import * as ReactDOM from 'react-dom'
 import {
     CatavoltPane, CvAppWindow, CvEvent, CvLoginResult, CvLogout, CvContext, CvLogoutCallback, CvWorkbench, CvLauncher,
     CvNavigationResult, CvLaunchActionCallback, CvQueryPaneCallback, CvValueAdapter, CvForm,
-    CvNavigation, CvListPane, CvRecordList, CvRecord, CvAction, CvActionCallback, CvProp
+    CvNavigation, CvListPane, CvRecordList, CvRecord, CvAction, CvActionCallback, CvProp, CvDetailsPane,
+    CvDetailsPaneCallback
 } from 'catreact'
 
 /** Import the Catavolt Javascript API objects that we'll use */
 import {
-    ColumnDef, ListContext, Log, LogLevel, Prop, Workbench, WorkbenchLaunchAction
+    ColumnDef, ListContext, Log, LogLevel, Prop, Workbench, WorkbenchLaunchAction, EntityRec,
+    DetailsContext
 } from 'catavolt-sdk'
 
 import {CvLoginPanel} from "catreact-html";
@@ -145,15 +147,36 @@ const CatreactNavbar = React.createClass<{windowId},{}>({
 
 });
 
+const ProductPage = React.createClass({
 
-const ProductList = React.createClass<{},{}>({
+    mixins: [CatreactAppBase],
+
+    render: function () {
+
+        const windowId = this.props.params.windowId; //get the window from the url param
+        const listNavId = this.props.params.listNavId;
+        const detailNavId = this.props.params.detailNavId;
+
+        return (
+            <div>
+                <ProductList windowId={windowId} navigationId={listNavId}/>
+                <ProductDetail navigationId={detailNavId}/>
+            </div>
+        );
+
+    }
+
+});
+
+
+const ProductList = React.createClass<{windowId, navigationId},{}>({
 
     mixins: [CatreactAppBase],
 
     render: function () {
 
         return (
-            <CvNavigation navigationId={this.props.params.listNavId}>
+            <CvNavigation navigationId={this.props.navigationId}>
                 <CvForm>
                     <div className="panel panel-primary">
                         <div className="panel-heading"><h5 className="panel-title">Products</h5></div>
@@ -198,6 +221,11 @@ const ProductList = React.createClass<{},{}>({
                                                                                           <CvProp propName={prop.name} entityRec={record} paneContext={listContext}/>
                                                                                       </td>
                                                                                   }}
+                                                                                  navigationListeners={[(navEvent:CvEvent<CvNavigationResult>)=>{
+                                                                                      const detailNavId = navEvent.resourceId;
+                                                                                      this.context.router.push('/product/' + this.props.windowId + '/'
+                                                                                          + this.props.navigationId + '/' + detailNavId);
+                                                                                  }]}
                                                                         />
                                                                     )
                                                                 })}
@@ -236,6 +264,52 @@ const ProductList = React.createClass<{},{}>({
     }
 });
 
+const ProductDetail = React.createClass<{navigationId:string},{}>({
+
+    mixins: [CatreactAppBase],
+
+    render: function () {
+
+        return (
+            <CvNavigation navigationId={this.props.navigationId}>
+                <CvForm>
+                    <div className="well">
+                        <CvDetailsPane paneRef={0} detailsRenderer={(cvContext:CvContext, record:EntityRec,
+                                                                     detailsCallback:CvDetailsPaneCallback)=>{
+                            const detailsContext:DetailsContext = cvContext.scopeCtx.scopeObj;
+                            return (
+                                <CvRecord entityRec={record} renderer={(cvContext:CvContext)=>{
+                                    return (
+                                        <table className="table">
+                                            <tbody>
+                                            <tr>
+                                                <td><span className="glyphicon glyphicon-info-sign" aria-hidden="true"/></td>
+                                                <td><span className="detail-label">{'Product Name: '}</span><CvProp propName="ProductName" entityRec={record}/></td>
+                                                <td><span className="detail-label">{'Category: '}</span><CvProp propName="CategoryID" entityRec={record}/></td>
+                                                <td><span className="detail-label">{'Supplier: '}</span><CvProp propName="SupplierID" entityRec={record}/></td>
+                                                <td><span className="detail-label">{'Unit Price: '}</span><CvProp propName="UnitPrice" entityRec={record}/></td>
+                                            </tr>
+                                            <tr>
+                                                <td></td>
+                                                <td><span className="detail-label">{'Quantity/Unit: '}</span><CvProp propName="QuantityPerUnit" entityRec={record}/></td>
+                                                <td><span className="detail-label">{'Units On Order: '}</span><CvProp propName="UnitsOnOrder" entityRec={record}/></td>
+                                                <td><span className="detail-label">{'Units In Stock: '}</span><CvProp propName="UnitsInStock" entityRec={record}/></td>
+                                                <td><span className="detail-label">{'Product ID: '}</span><CvProp propName="ProductID" entityRec={record}/></td>
+                                            </tr>
+                                            </tbody>
+                                        </table>
+                                    );
+                                }}/>
+                            );
+                        }}/>
+                    </div>
+                </CvForm>
+            </CvNavigation>
+        );
+    }
+});
+
+
 /**
  * Render the example to the document
  */
@@ -245,7 +319,7 @@ const app = (
         <Route path="/" component={CatreactApp}>
             <IndexRoute component={CatreactLogin}/>
             <Route path="window/:windowId" component={CatreactWindow}>
-                <Route path="/product/:windowId/:listNavId" component={ProductList}/>
+                <Route path="/product/:windowId/:listNavId(/:detailNavId)" component={ProductPage}/>
             </Route>
         </Route>
     </Router>
