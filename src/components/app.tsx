@@ -147,6 +147,12 @@ const CatreactNavbar = React.createClass<{windowId},{}>({
 
 });
 
+
+/**
+ * This is a 'wrapper' component represent our 'Page'
+ * The page allows us to place a detail view below the list when an
+ * item is selected
+ */
 const ProductPage = React.createClass({
 
     mixins: [CatreactAppBase],
@@ -169,6 +175,11 @@ const ProductPage = React.createClass({
 });
 
 
+/**
+ *  We've convert this to a standard component, no long accessing the router supplied 'params' object.
+ *  We've also added a route change when an item is clicked.  This adds the 'detailNavId' url param to allow
+ *  the detail item to be displayed.
+ */
 const ProductList = React.createClass<{windowId, navigationId},{}>({
 
     mixins: [CatreactAppBase],
@@ -264,6 +275,14 @@ const ProductList = React.createClass<{windowId, navigationId},{}>({
     }
 });
 
+/**
+ * This is a component that shows the a single product's detail information (i.e. a single record)
+ * It contains a typical 'Navigation' hierarchy - that is, the result of a 'Navigation Request'
+ * Navigation -> Form -> (Some set of 'panes')
+ * Here we are referencing the 1st pane (paneRef={0}) that we know is a 'DetailsPane' (i.e. a single product record)
+ * The CvProp component, when surrounded with a CvRecord component, allows us to access a particular property
+ * in the record by name and display it
+ */
 const ProductDetail = React.createClass<{navigationId:string},{}>({
 
     mixins: [CatreactAppBase],
@@ -311,9 +330,8 @@ const ProductDetail = React.createClass<{navigationId:string},{}>({
 
 
 /**
- * Render the example to the document
+ *  We've added a wrapper component here as the routing target that allows us to show both the list and the detail
  */
-
 const app = (
     <Router history={hashHistory}>
         <Route path="/" component={CatreactApp}>
@@ -325,6 +343,9 @@ const app = (
     </Router>
 );
 
+/**
+ * Render the example to the document
+ */
 ReactDOM.render(app, document.getElementById('catreactApp'));
 
 
