@@ -264,6 +264,10 @@ const ProductList = React.createClass<{windowId, navigationId},{}>({
     }
 });
 
+
+/**
+ *  We've added an image property with 'binary' renderer to display the property
+ */
 const ProductDetail = React.createClass<{navigationId:string},{}>({
 
     mixins: [CatreactAppBase],
@@ -314,11 +318,6 @@ const ProductDetail = React.createClass<{navigationId:string},{}>({
     }
 });
 
-
-/**
- * Render the example to the document
- */
-
 const app = (
     <Router history={hashHistory}>
         <Route path="/" component={CatreactApp}>
@@ -330,6 +329,10 @@ const app = (
     </Router>
 );
 
+
+/**
+ * Render the example to the document
+ */
 ReactDOM.render(app, document.getElementById('catreactApp'));
 
 
