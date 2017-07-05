@@ -43,6 +43,13 @@ const CatreactApp = React.createClass({
     }
 });
 
+
+/**
+ Create a basic login panel using the 'pre-made' Catavolt Login component from the 'ext' package
+ The 'ext' package contains fully built, styled components, while the 'core' package contains
+ unstyled, customizable components.
+ We've used this here for convenience, but this is the only 'html' (catreact-html package) component we'll used in this app.
+ */
 const CatreactLogin = React.createClass({
 
     render: function () {
