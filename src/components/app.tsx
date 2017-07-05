@@ -26,6 +26,10 @@ Log.logLevel(LogLevel.DEBUG);
  *  *********************************
  */
 
+/**
+ Create a 'main' application wrapper, with a root 'CatavoltPane'
+ This initializes the Catavolt Javascript Sdk under the covers and exports some top-level objects to the scope
+ */
 const CatreactApp = React.createClass({
 
     render: function () {
