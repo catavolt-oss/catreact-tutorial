@@ -83,6 +83,9 @@ const CatreactLogin = React.createClass({
     }
 });
 
+/**
+ *  Add our new component, CatreactNavbar
+ */
 const CatreactWindow = React.createClass({
 
     mixins: [CatreactAppBase],
@@ -110,6 +113,12 @@ const CatreactWindow = React.createClass({
     }
 });
 
+/**
+ *  Set up an item on our 'Navigation Bar' which is actually one of our Workbench Launchers
+ *  Use the workbenchId and the launcherId to target them with the corresponding components
+ *  Fire the launcher action when the user clicks via the supplied callback object from the CvLauncher's
+ *  renderer function.
+ */
 const CatreactNavbar = React.createClass<{windowId},{}>({
 
     mixins: [CatreactAppBase],
