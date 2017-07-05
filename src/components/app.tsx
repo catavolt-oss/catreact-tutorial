@@ -46,6 +46,10 @@ const CatreactApp = React.createClass({
     }
 });
 
+/**
+ * Add the prop 'loginListener' to the notification list to be
+ * used by our SimpleRouter
+ */
 const CatreactLogin = React.createClass<{loginListener},{}>({
 
     render: function () {
