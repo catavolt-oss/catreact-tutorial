@@ -113,6 +113,11 @@ const CatreactWindow = React.createClass({
     }
 });
 
+/**
+ *  Add a listener for the Products List Launch Action
+ *  Respond by pushing a new path onto the router
+ */
+
 const CatreactNavbar = React.createClass<{windowId},{}>({
 
     mixins: [CatreactAppBase],
@@ -146,6 +151,14 @@ const CatreactNavbar = React.createClass<{windowId},{}>({
 });
 
 
+/**
+ This is a component that shows the Product List
+ It contains a typical 'Navigation' hierarchy - that is, the result of a 'Navigation Request'
+ Navigation -> Form -> (Some set of 'panes')
+ Here we are referencing the 1st pane (paneRef={0}) that we know is a 'ListPane' (i.e. the product list)
+ We then use 'renderers' that expose the list data to construct a table with rows of supplier info
+ The paging controls use a 'callback', also exposed by the 'renderer' function of the CvListPane
+ */
 const ProductList = React.createClass<{},{}>({
 
     mixins: [CatreactAppBase],
@@ -237,7 +250,7 @@ const ProductList = React.createClass<{},{}>({
 });
 
 /**
- * Render the example to the document
+ * Add the List route
  */
 
 const app = (
@@ -250,6 +263,11 @@ const app = (
         </Route>
     </Router>
 );
+
+/**
+ * Render the example to the document
+ */
+
 
 ReactDOM.render(app, document.getElementById('catreactApp'));
 
