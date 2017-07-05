@@ -69,6 +69,11 @@ const CatreactLogin = React.createClass<{loginListener},{}>({
     }
 });
 
+/**
+ * Create a 'window' top-level container, with a logout button
+ * The 'window' is associated with a 'session' and will contain all subcomponents, once we're logged in
+ * This is evident in the 'route' configuration (see the route setup at the end of the file)
+ */
 const CatreactWindow = React.createClass<{windowId, logoutListener},{}>({
 
     render: function () {
@@ -92,6 +97,11 @@ const CatreactWindow = React.createClass<{windowId, logoutListener},{}>({
 
 });
 
+/**
+ * Simple router example
+ * Watch for a state change and rerender the app accordingly
+ * Here we 'listen' for a login event and set the state param 'windowId'
+ */
 const SimpleRouter = React.createClass({
 
     render: function() {
