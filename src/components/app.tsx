@@ -290,11 +290,16 @@ const ProductDetail = React.createClass<{navigationId:string},{}>({
                                                 <td><span className="detail-label">{'Unit Price: '}</span><CvProp propName="UnitPrice" entityRec={record}/></td>
                                             </tr>
                                             <tr>
-                                                <td></td>
+                                                <td/>
                                                 <td><span className="detail-label">{'Quantity/Unit: '}</span><CvProp propName="QuantityPerUnit" entityRec={record}/></td>
                                                 <td><span className="detail-label">{'Units On Order: '}</span><CvProp propName="UnitsOnOrder" entityRec={record}/></td>
                                                 <td><span className="detail-label">{'Units In Stock: '}</span><CvProp propName="UnitsInStock" entityRec={record}/></td>
                                                 <td><span className="detail-label">{'Product ID: '}</span><CvProp propName="ProductID" entityRec={record}/></td>
+                                            </tr>
+                                            <tr>
+                                                <td colSpan={5} className="detail-image-prop">
+                                                    <CvProp propName="Photo" entityRec={record} binaryRenderer={binaryUrl=><img src={binaryUrl}/>} />
+                                                </td>
                                             </tr>
                                             </tbody>
                                         </table>

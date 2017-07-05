@@ -113,32 +113,6 @@ body {
     font-weight: bold;
 }
 
-/* catavolt icons */
-
-.cv-icon {
-    position: relative;
-    top: 1px;
-    display: inline-block;
-    font-family: 'Glyphicons Halflings';
-    font-style: normal;
-    font-weight: normal;
-    line-height: 1;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-.cv-bool-true {
-    color: #5a900c;
-}
-
-.cv-bool-true:before {
-    content: "\e013";
-}
-
-.cv-bool-false {
-    color: #c53b10;
-}
-
-.cv-bool-false:before {
-    content: "\e014";
+.detail-image-prop {
+    text-align: center;
 }

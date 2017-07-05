@@ -22,8 +22,8 @@
     "babel-preset-react": "^6.3.13",
     "babelify": "^7.2.0",
     "catavolt-sdk": "1.1.29",
-    "catreact": "2.0.44",
-    "catreact-html": "2.0.49",
+    "catreact": "2.0.45",
+    "catreact-html": "2.0.50",
     "react": "~15.3.2",
     "react-dom": "~15.3.2",
     "react-router": "2.8.1",
@@ -32,8 +32,8 @@
   },
   "peerDependencies": {
     "catavolt-sdk": "1.1.29",
-    "catreact": "2.0.44",
-    "catreact-html": "2.0.49",
+    "catreact": "2.0.45",
+    "catreact-html": "2.0.50",
     "react": "~15.3.2",
     "react-dom": "~15.3.2"
   },
