@@ -57,6 +57,10 @@ const CatreactApp = React.createClass({
     }
 });
 
+
+/**
+ * Replace the earlier 'callback' with a change to the URL via the router
+ */
 const CatreactLogin = React.createClass({
 
     mixins: [CatreactAppBase],
@@ -82,6 +86,13 @@ const CatreactLogin = React.createClass({
     }
 });
 
+/**
+ *
+ * The 'params' prop is now made available by the router to access our URL params
+ * Here we access the supplied 'windowId'
+ *
+ * Also - Replace the earlier 'callback' with a change to the URL via the router
+ */
 const CatreactWindow = React.createClass({
 
     mixins: [CatreactAppBase],
@@ -109,7 +120,10 @@ const CatreactWindow = React.createClass({
 });
 
 /**
- * Render the example to the document
+ * Set up the router - this replaces our 'SimpleRouter' from the last example
+ * react-router gives 'real' URL and history management
+ * For now, we have default route - the login page and a single, post-login route,
+ * the application window with a menu bar
  */
 
 const app = (
@@ -120,6 +134,10 @@ const app = (
         </Route>
     </Router>
 );
+
+/**
+ * Render the example to the document
+ */
 
 ReactDOM.render(app, document.getElementById('catreactApp'));
 
