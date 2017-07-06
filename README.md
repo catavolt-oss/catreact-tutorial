@@ -6,6 +6,7 @@ catreact-tutorial
 # To begin the tutorial
 
 * clone this repo **git clone https://github.com/catavolt-oss/catreact-tutorial.git**
+* git checkout p0
 
 # Get setup for building the code
 
