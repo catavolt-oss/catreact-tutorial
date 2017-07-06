@@ -12,7 +12,7 @@ catreact-tutorial
 
 * Install Typescript (or an ide with Typescript support).  [WebStorm](https://www.jetbrains.com/webstorm/) is recommended as an ide, as it has very good Typescript support
 
-* Install [Node.js](https://nodejs.org/en/) (5+ recommended) directly or use [nvm](https://github.com/creationix/nvm#installation) to easily manage installations
+* Install [Node.js](https://nodejs.org/en/) (v6.11.0 recommended) directly or use [nvm](https://github.com/creationix/nvm#installation) to easily manage installations
 
 * From this project's root directory (catreact-tutorial), run **'npm install'**. This should install all required packages to the 'node_modules' directory in 'catreact-tutorial', including the catavolt library dependencies.
 
