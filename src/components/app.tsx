@@ -302,7 +302,7 @@ const ProductDetail = React.createClass<{navigationId:string},{}>({
                                             </tr>
                                             <tr>
                                                 <td colSpan={5} className="detail-image-prop">
-                                                    <CvProp propName="Photo" entityRec={record} binaryRenderer={binaryUrl=><img src={binaryUrl}/>} />
+                                                    <CvProp propName="Photo" entityRec={record} binaryRenderer={binaryUrl=><img src={binaryUrl}/>} key={record.objectId}/>
                                                 </td>
                                             </tr>
                                             </tbody>
