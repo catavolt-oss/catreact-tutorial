@@ -82,5 +82,4 @@ temp/
 
 # Generated javascript and typescript definition files
 src/js/
-web/bundle.js
 src/tsd/
